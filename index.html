@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Commerce Cart System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">Gilbets Shop</div>
+        <ul>
+            <li><a class="menu active" onclick="showPage('beranda')">Beranda</a></li>
+            <li><a class="menu" onclick="showPage('produk')">Produk</a></li>
+            <li><a class="menu" onclick="showPage('keranjang')">Keranjang (<span id='cart-count'>0</span>)</a></li>
+            <li><a class="menu" onclick="showPage('checkout')">Checkout</a></li>
+        </ul>
+    </nav>
+
+    <!-- BERANDA -->
+    <section id="beranda" class="active">
+        <center>
+        <div class="hero">
+            
+            <h1>Selamat Datang di Gilberts Shop</h1>
+            <p>Peralatan-peralatan olahraga basket!</p> 
+            
+        </div>
+        </center>
+    </section>
+
+    <!-- PRODUK -->
+    <section id="produk">
+        <h2>Produk Kami</h2>
+
+        <div class="produk-container">
+
+            <div class="produk-card">
+                <img src="bola basket.jfif">
+                <h3>Bola Basket Wilson</h3>
+                <p class="harga" data-price="3500000">Rp 3.500.000</p>
+                <button onclick="addToCart('Bola Basket Wilson',3500000)">Tambah ke Keranjang</button>
+            </div>
+
+            <div class="produk-card">
+                <img src="jersey.jfif">
+                <h3>Jersey Lakers</h3>
+                <p class="harga" data-price="200000">Rp 200.000</p>
+                <button onclick="addToCart('Jersey Lakers',200000)">Tambah ke Keranjang</button>
+            </div>
+
+            <div class="produk-card">
+                <img src="sepatu.jpg">
+                <h3>Sepatu Kobe 5</h3>
+                <p class="harga" data-price="5000000">Rp 5.000.000</p>
+                <button onclick="addToCart('Sepatu Kobe 5',5000000)">Tambah ke Keranjang</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- KERANJANG -->
+    <section id="keranjang">
+        <h2>Keranjang Belanja</h2>
+        <div id="cart-list"></div>
+        <h3>Total: Rp <span id="cart-total">0</span></h3>
+        <button class="checkout-btn" onclick="showPage('checkout')">Lanjut ke Checkout</button>
+    </section>
+
+    <!-- CHECKOUT -->
+    <section id="checkout">
+        <h2>Checkout</h2>
+
+        <p>Nama:</p>
+        <input type="text" id="nama" placeholder="Nama lengkap">
+
+        <p>Alamat:</p>
+        <textarea id="alamat" placeholder="Alamat lengkap"></textarea>
+
+        <h3>Total Pembayaran: Rp <span id="checkout-total">0</span></h3>
+
+        <button class="pay-btn" onclick="bayar()">Bayar Sekarang</button>
+    </section>
+
+    <footer>© 2025 Gilberts Shop</footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // PINDAH HALAMAN
+        function showPage(page) {
+            document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(page).classList.add("active");
+        }
+
+        // CART SYSTEM
+        let cart = [];
+
+        function addToCart(nama, harga) {
+            cart.push({nama, harga});
+            updateCart();
+            alert(nama + " ditambahkan ke keranjang!");
+        }
+
+        function updateCart() {
+            let list = document.getElementById("cart-list");
+            list.innerHTML = "";
+
+            let total = 0;
+
+            cart.forEach((item, i) => {
+                list.innerHTML += `
+                    <div class="cart-item">
+                        ${item.nama} - Rp ${item.harga.toLocaleString()}
+                        <button onclick="removeItem(${i})">Hapus</button>
+                    </div>
+                `;
+                total += item.harga;
+            });
+
+            document.getElementById("cart-total").innerText = total.toLocaleString();
+            document.getElementById("checkout-total").innerText = total.toLocaleString();
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function bayar() {
+            const nama = document.getElementById("nama").value;
+            const alamat = document.getElementById("alamat").value;
+
+            if (nama === "" || alamat === "") {
+                alert("Lengkapi nama dan alamat!");
+                return;
+            }
+
+            alert("Terima kasih, " + nama + "! Pesanan kamu sedang diproses.");
+            cart = [];
+            updateCart();
+            showPage("beranda");
+        }
+    </script>
+
+</body>
+</html>
